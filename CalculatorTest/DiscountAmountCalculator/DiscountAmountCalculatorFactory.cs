@@ -13,14 +13,17 @@ namespace CalculatorTest
         {
             _amountCalculatorFactory = new Calculator.Model.DiscountAmountCalculatorFactory();
         }
-
-        [Test]
-        [TestCase(-1)]
+         
+        [TestCase(CustomerType.Unregistered, typeof(UnregisteredDiscountAmountCalculator))]
+        [TestCase(CustomerType.Registered, typeof(RegisteredDiscountAmountCalculator))]
+        [TestCase(CustomerType.Valuable, typeof(ValuableDiscountAmountCalculator))]
+        [TestCase(CustomerType.MostValuable, typeof(MostValuableDiscountAmountCalculator))]
         public void MustReturnUnregisteredCalculatorWhereTypeIsUnregistered(CustomerType customerType, Type discountAmountCalculatorType)
         {
-            var discountAmountCalculator = _amountCalculatorFactory.GetIDiscountAmountCalculator(CustomerType.Unregistered);
+            var discountAmountCalculator = _amountCalculatorFactory.GetIDiscountAmountCalculator(customerType);
             Assert.NotNull(discountAmountCalculator);
-            Assert.IsInstanceOf( typeof(UnregisteredDiscountAmountCalculator), discountAmountCalculator);
+            Assert.IsInstanceOf(discountAmountCalculatorType, discountAmountCalculator);
         }
+
     }
 }
