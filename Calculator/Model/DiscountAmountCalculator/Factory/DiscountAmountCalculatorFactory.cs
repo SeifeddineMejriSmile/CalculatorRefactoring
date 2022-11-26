@@ -1,30 +1,22 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Calculator.Model
 {
     public class DiscountAmountCalculatorFactory : IDiscountAmountCalculatorFactory
     {
+        private readonly IEnumerable<IDiscountAmountCalculator> _discountAmountCalculators;
+
+        public DiscountAmountCalculatorFactory(IEnumerable<IDiscountAmountCalculator> discountAmountCalculators)
+        {
+            _discountAmountCalculators = discountAmountCalculators;
+        }
+
         public IDiscountAmountCalculator GetIDiscountAmountCalculator(CustomerType customerType)
         {
-            IDiscountAmountCalculator amountCalculator = null;
-            switch (customerType)
-            {
-                case CustomerType.Unregistered:
-                    amountCalculator = new UnregisteredDiscountAmountCalculator();
-                    break;
-                case CustomerType.Registered:
-                    amountCalculator = new RegisteredDiscountAmountCalculator();
-                    break;
-                case CustomerType.Valuable:
-                    amountCalculator = new ValuableDiscountAmountCalculator();
-                    break;
-                case CustomerType.MostValuable:
-                    amountCalculator = new MostValuableDiscountAmountCalculator();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(customerType), customerType, null);
-            }
-
+            var amountCalculator = _discountAmountCalculators.FirstOrDefault(p=> p.CustomerType == customerType);
             return amountCalculator;
         }
     }

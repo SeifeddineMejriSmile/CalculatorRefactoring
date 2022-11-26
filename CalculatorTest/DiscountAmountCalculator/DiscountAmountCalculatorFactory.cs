@@ -1,5 +1,7 @@
 using System;
+using Calculator;
 using Calculator.Model;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace CalculatorTest
@@ -11,7 +13,10 @@ namespace CalculatorTest
         [SetUp]
         public void Setup()
         {
-            _amountCalculatorFactory = new Calculator.Model.DiscountAmountCalculatorFactory();
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.Register();
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            _amountCalculatorFactory = serviceProvider.GetService<IDiscountAmountCalculatorFactory>();
         }
          
         [TestCase(CustomerType.Unregistered, typeof(UnregisteredDiscountAmountCalculator))]
